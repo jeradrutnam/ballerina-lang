@@ -10,6 +10,32 @@ body {
     padding: 0 30px;
 }
 
+.toc {
+    margin-bottom: 50px;
+}
+
+.toc .toc-heading {
+    font-weight: 400;
+}
+
+.toc .toc-title {
+    font-style: italic;
+}
+
+.toc .ui.grid {
+    border-top: 1px solid rgba(34, 36, 38, 0.15);
+    margin: 10px 0;
+    padding-top: 10px;
+}
+
+.toc .ui.grid>.row {
+    padding: 0;
+}
+
+.toc .ui.grid>.row>.column {
+    padding: 0.5em;
+}
+
 .title {
     font-weight: 400;
     font-size: 30px;
@@ -21,7 +47,8 @@ body {
     margin-right: 5px;
 }
 
-.title .object-type {
+.title .object-type,
+.title .service-type {
     font-size: 17px;
     font-style: italic;
     margin-left: 10px;

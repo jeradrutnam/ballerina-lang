@@ -17,11 +17,12 @@
  */
 
 import React from 'react';
+import TableOfContent from './TableOfContent';
 import Documentation from './Documentation';
+import './Documentation.css';
 
 export default class DocPreview extends React.Component {
     getDocumentationDetails(node) {
-
         let parameters = {};
         if(this[`_get${node.kind}Parameters`]) {
             parameters = this[`_get${node.kind}Parameters`](node);
@@ -48,21 +49,33 @@ export default class DocPreview extends React.Component {
             }
         }
 
-        let typeNodeKind;
+        let kind = node.kind;
         if (node.typeNode) {
-            typeNodeKind = node.typeNode.kind;
+            kind = node.typeNode.kind;
         }
 
         const documentationDetails = {
-            kind: node.kind,
+            kind,
             title: node.name.value,
             description,
             parameters,
-            typeNodeKind,
             returnParameter
         };
 
         return documentationDetails;
+    }
+
+    getTableOfContent(docElements){
+        var types = {};
+        docElements.forEach((node,key) => {
+            let kind = node.props.docDetails.kind;
+
+            if(!types[kind]){
+                types[kind] = [];
+            }
+            types[kind].push(node.props.docDetails);
+        });
+        return types;
     }
 
     _getFunctionParameters(node) {
@@ -97,17 +110,25 @@ export default class DocPreview extends React.Component {
 
     render() {
         const docElements = [];
+        const docPreviewRenderer = [];
+
         this.props.ast.topLevelNodes.forEach(node => {
             const documentables = ['Function', 'Service', 'TypeDefinition', 'Variable', 'Endpoint'];
+            
             if (!documentables.includes(node.kind)) {
                 return;
             }
 
             const docDetails = this.getDocumentationDetails(node);
+
             docElements.push(
                 <Documentation docDetails={docDetails}/>
             );
         });
-        return docElements;
+
+        docPreviewRenderer.push(<TableOfContent content={this.getTableOfContent(docElements)} />);
+        docPreviewRenderer.push(docElements);
+
+        return docPreviewRenderer;
     }
 }
